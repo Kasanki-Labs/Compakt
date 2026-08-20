@@ -4,78 +4,216 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Compakt — you deserve better compression</title>
-<meta name="description" content="A local-first archiver that routes files by measuring what they contain, and never opens a network socket.">
+<meta name="description" content="An archiver that routes files by measuring what they contain, and never opens a network socket. Windows and Linux.">
+<link rel="icon" href="favicon.ico">
+<meta property="og:title" content="Compakt">
+<meta property="og:description" content="You deserve better compression.">
+<meta name="theme-color" content="#0A0A0A">
 <style>
+/* Design tokens lifted from app/theme.py so the site and the application
+   are one system. Near-black ground, separation by ELEVATION rather than
+   outlines, hairlines reserved for genuine dividers, and white spent
+   sparingly -- one primary action -- so the one white thing means
+   something. Green is the Kasanki Labs mark, and nothing else. */
 :root{
-  --bg:#ffffff; --fg:#16181d; --muted:#5c6270; --edge:#e3e6ec;
-  --card:#f7f8fa; --accent:#1a5fd0; --accent-fg:#ffffff;
-  --warn-bg:#fff8e6; --warn-edge:#e8d08a; --code:#f2f4f7;
-  --mono:ui-monospace,SFMono-Regular,"SF Mono",Menlo,Consolas,monospace;
-  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --ground:#0A0A0A;
+  --surface:#111111;
+  --raised:#181818;
+  --hover:#1F1F1F;
+  --hairline:#222222;
+  --edge:#2E2E2E;
+  --text:#FFFFFF;
+  --faint:#4A4A4A;
+  --dim:#8A8A8A;
+  --kasanki:#6FCF80;
+  --warn:#E0B341;
+  --mono:ui-monospace,"Cascadia Mono",SFMono-Regular,Menlo,Consolas,monospace;
+  --sans:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,
+         Roboto,Helvetica,Arial,sans-serif;
+  --page:min(72rem,100% - 3rem);
 }
-@media (prefers-color-scheme:dark){
-  :root:not([data-theme="light"]){
-    --bg:#0f1116; --fg:#e6e8ec; --muted:#9aa1af; --edge:#262a33;
-    --card:#161920; --accent:#5b9cff; --accent-fg:#0f1116;
-    --warn-bg:#251f10; --warn-edge:#5a4a20; --code:#181c23;
-  }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--ground);color:var(--text);font-family:var(--sans);
+  line-height:1.6;font-size:16px;-webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
 }
-:root[data-theme="dark"]{
-  --bg:#0f1116; --fg:#e6e8ec; --muted:#9aa1af; --edge:#262a33;
-  --card:#161920; --accent:#5b9cff; --accent-fg:#0f1116;
-  --warn-bg:#251f10; --warn-edge:#5a4a20; --code:#181c23;
+.wrap{width:var(--page);margin-inline:auto}
+a{color:inherit}
+
+/* ---------- top bar ---------- */
+.topbar{
+  position:sticky;top:0;z-index:10;background:rgba(10,10,10,.82);
+  backdrop-filter:blur(14px);border-bottom:1px solid var(--hairline);
 }
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);
-     line-height:1.65;-webkit-font-smoothing:antialiased}
-.wrap{max-width:60rem;margin:0 auto;padding:0 1.5rem}
-header{border-bottom:1px solid var(--edge);padding:4.5rem 0 3.5rem;text-align:center}
-h1{font-size:clamp(2.6rem,7vw,4rem);margin:0 0 .4rem;letter-spacing:-.03em;font-weight:700}
-.slogan{font-size:clamp(1.05rem,2.6vw,1.3rem);color:var(--fg);margin:0 0 1.2rem;font-weight:500}
-.lede{color:var(--muted);max-width:38rem;margin:0 auto 2rem;font-size:1.05rem}
-.badges{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem}
-.badge{font-family:var(--mono);font-size:.75rem;color:var(--muted);
-       border:1px solid var(--edge);border-radius:2rem;padding:.25rem .7rem}
-.dl{display:flex;gap:.75rem;justify-content:center;flex-wrap:wrap}
-.btn{display:inline-block;background:var(--accent);color:var(--accent-fg);
-     text-decoration:none;padding:.75rem 1.4rem;border-radius:.4rem;font-weight:600;
-     border:1px solid transparent}
-.btn.alt{background:transparent;color:var(--fg);border-color:var(--edge)}
-.btn small{display:block;font-weight:400;font-size:.75rem;opacity:.8}
-section{padding:3rem 0;border-bottom:1px solid var(--edge)}
-h2{font-size:1.6rem;letter-spacing:-.02em;margin:0 0 1rem}
-h3{font-size:1.05rem;margin:1.8rem 0 .5rem}
-p{margin:0 0 1rem}
-code{font-family:var(--mono);font-size:.88em;background:var(--code);
-     padding:.15em .4em;border-radius:.25rem}
-pre{background:var(--code);border:1px solid var(--edge);border-radius:.5rem;
-    padding:1rem;overflow-x:auto;margin:0 0 1rem}
-pre code{background:none;padding:0;font-size:.85rem;line-height:1.6}
-.grid{display:grid;gap:1rem;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr))}
-.card{background:var(--card);border:1px solid var(--edge);border-radius:.5rem;padding:1.1rem}
-.card h3{margin:0 0 .4rem;font-size:1rem}
-.card p{margin:0;color:var(--muted);font-size:.92rem}
-.tablewrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:.92rem;min-width:32rem}
-th,td{text-align:left;padding:.55rem .7rem;border-bottom:1px solid var(--edge)}
-th{font-weight:600;color:var(--muted);font-size:.82rem;text-transform:uppercase;
-   letter-spacing:.04em}
-td.num{font-family:var(--mono);text-align:right}
-.win{color:var(--fg);font-weight:600}
-.note{background:var(--warn-bg);border:1px solid var(--warn-edge);
-      border-radius:.5rem;padding:1.1rem 1.3rem;margin:0 0 1rem}
-.note h3{margin-top:0}
-.muted{color:var(--muted)}
-footer{padding:2.5rem 0 3.5rem;color:var(--muted);font-size:.88rem;text-align:center}
-a{color:var(--accent)}
-ul{margin:0 0 1rem;padding-left:1.2rem}
-li{margin-bottom:.4rem}
+.topbar .wrap{display:flex;align-items:center;gap:.6rem;
+  height:3.5rem;justify-content:space-between}
+.lab{display:flex;align-items:center;gap:.55rem;text-decoration:none}
+.lab img{width:22px;height:22px;display:block}
+.lab span{
+  font-size:.7rem;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--dim);font-weight:600;
+}
+.topnav{display:flex;gap:1.5rem}
+.topnav a{
+  font-size:.82rem;color:var(--dim);text-decoration:none;
+  transition:color .15s ease;
+}
+.topnav a:hover{color:var(--text)}
+@media(max-width:640px){.topnav{display:none}}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;overflow:hidden;
+  padding:clamp(4rem,11vw,8rem) 0 clamp(3.5rem,8vw,6rem);
+  text-align:center;border-bottom:1px solid var(--hairline);
+}
+.hero::before{
+  content:"";position:absolute;inset:-40% 0 auto 50%;
+  width:min(52rem,110vw);aspect-ratio:1;transform:translateX(-50%);
+  background:radial-gradient(circle,rgba(255,255,255,.055) 0%,transparent 62%);
+  pointer-events:none;
+}
+.hero > .wrap{position:relative}
+.mark{
+  width:clamp(72px,13vw,104px);height:auto;display:block;
+  margin:0 auto 1.75rem;
+}
+h1{
+  font-size:clamp(3rem,9vw,5.25rem);font-weight:700;letter-spacing:-.045em;
+  line-height:1;margin-bottom:1rem;
+}
+.slogan{
+  font-size:clamp(1.1rem,2.7vw,1.45rem);font-weight:500;
+  letter-spacing:-.015em;margin-bottom:1.25rem;
+}
+.lede{
+  color:var(--dim);max-width:36rem;margin:0 auto 2.25rem;
+  font-size:1.02rem;
+}
+.chips{display:flex;gap:.4rem;justify-content:center;flex-wrap:wrap;
+  margin-bottom:2.5rem}
+.chip{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.02em;
+  color:var(--dim);background:var(--surface);
+  border:1px solid var(--hairline);border-radius:2rem;padding:.3rem .8rem;
+}
+.chip b{color:var(--kasanki);font-weight:600}
+
+/* ---------- buttons: exactly one white ---------- */
+.actions{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap}
+.btn{
+  display:inline-flex;flex-direction:column;align-items:center;
+  text-decoration:none;padding:.8rem 1.6rem;border-radius:.5rem;
+  font-weight:600;font-size:.95rem;letter-spacing:-.01em;
+  border:1px solid transparent;transition:background .15s ease,
+  border-color .15s ease,transform .15s ease;
+}
+.btn:hover{transform:translateY(-1px)}
+.btn small{font-weight:400;font-size:.72rem;opacity:.62;margin-top:.15rem}
+.btn-primary{background:var(--text);color:var(--ground)}
+.btn-primary:hover{background:#E8E8E8}
+.btn-ghost{background:var(--raised);color:var(--text);border-color:var(--edge)}
+.btn-ghost:hover{background:var(--hover)}
+
+/* ---------- sections ---------- */
+section{padding:clamp(3.5rem,7vw,5.5rem) 0;border-bottom:1px solid var(--hairline)}
+.eyebrow{
+  font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--faint);margin-bottom:.9rem;
+}
+h2{font-size:clamp(1.6rem,3.6vw,2.25rem);font-weight:600;
+  letter-spacing:-.03em;line-height:1.15;margin-bottom:1rem;max-width:26ch}
+h3{font-size:1rem;font-weight:600;letter-spacing:-.01em;margin-bottom:.4rem}
+p{color:var(--dim);max-width:62ch;margin-bottom:1rem}
+p strong{color:var(--text);font-weight:600}
+p:last-child{margin-bottom:0}
+
+/* ---------- cards: elevation, not outlines ---------- */
+.grid{display:grid;gap:1px;background:var(--hairline);
+  border:1px solid var(--hairline);border-radius:.75rem;overflow:hidden;
+  grid-template-columns:repeat(auto-fit,minmax(16rem,1fr));margin-top:2rem}
+.card{background:var(--surface);padding:1.5rem;transition:background .18s ease}
+.card:hover{background:var(--raised)}
+.card p{font-size:.92rem;margin:0}
+.card .n{font-family:var(--mono);font-size:.7rem;color:var(--faint);
+  display:block;margin-bottom:.7rem}
+
+/* ---------- code ---------- */
+pre{
+  background:var(--surface);border:1px solid var(--hairline);
+  border-radius:.6rem;padding:1.15rem 1.3rem;overflow-x:auto;margin:1.5rem 0;
+}
+code{font-family:var(--mono);font-size:.85rem;line-height:1.85}
+p code,li code{background:var(--raised);padding:.12em .4em;border-radius:.25rem;
+  font-size:.85em;color:var(--text)}
+pre code{background:none;padding:0}
+.c-dim{color:var(--faint)}
+
+/* ---------- table ---------- */
+.tablewrap{overflow-x:auto;margin-top:1.75rem;border:1px solid var(--hairline);
+  border-radius:.75rem}
+table{border-collapse:collapse;width:100%;min-width:34rem;
+  background:var(--surface)}
+th,td{text-align:left;padding:.85rem 1.15rem;
+  border-bottom:1px solid var(--hairline);font-size:.9rem}
+tr:last-child td{border-bottom:none}
+th{font-family:var(--mono);font-size:.68rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--faint);font-weight:500}
+td.num{font-family:var(--mono);text-align:right;color:var(--text)}
+.win{color:var(--kasanki);font-weight:600}
+.loss{color:var(--dim)}
+
+/* ---------- callout ---------- */
+.callout{
+  background:var(--surface);border:1px solid var(--hairline);
+  border-left:2px solid var(--warn);border-radius:.6rem;
+  padding:1.5rem 1.75rem;margin-top:1.75rem;
+}
+.callout h3{color:var(--warn);margin-bottom:.7rem}
+.callout pre{background:var(--ground);margin:1.1rem 0}
+
+/* ---------- lists ---------- */
+ul{list-style:none;margin:1rem 0;max-width:62ch}
+li{color:var(--dim);padding-left:1.4rem;position:relative;margin-bottom:.55rem;
+  font-size:.95rem}
+li::before{content:"";position:absolute;left:0;top:.62em;width:.4rem;
+  height:1px;background:var(--faint)}
+
+/* ---------- footer ---------- */
+footer{padding:3.5rem 0 4.5rem;text-align:center}
+.footmark{width:26px;height:26px;margin:0 auto 1rem;display:block;opacity:.9}
+.footlinks{display:flex;gap:1.4rem;justify-content:center;flex-wrap:wrap;
+  margin-bottom:1.5rem}
+.footlinks a{font-size:.86rem;color:var(--dim);text-decoration:none;
+  transition:color .15s ease}
+.footlinks a:hover{color:var(--text)}
+.copy{font-size:.78rem;color:var(--faint)}
+.copy b{color:var(--dim);font-weight:500}
 </style>
 </head>
 <body>
 
-<header>
+<div class="topbar">
   <div class="wrap">
+    <a class="lab" href="https://github.com/Kasanki-Labs">
+      <img src="kasanki-mark.png" alt="Kasanki Labs">
+      <span>Kasanki&nbsp;Labs</span>
+    </a>
+    <nav class="topnav">
+      <a href="#how">How it works</a>
+      <a href="#terminal">Terminal</a>
+      <a href="#benchmarks">Benchmarks</a>
+      <a href="#install">Install</a>
+      <a href="https://github.com/Kasanki-Labs/Compakt">GitHub</a>
+    </nav>
+  </div>
+</div>
+
+<div class="hero">
+  <div class="wrap">
+    <img class="mark" src="compakt-mark.png" alt="Compakt">
     <h1>Compakt</h1>
     <p class="slogan">You deserve better compression.</p>
     <p class="lede">
@@ -83,93 +221,120 @@ li{margin-bottom:.4rem}
       routing each one by what it measurably contains rather than by its
       name. It opens no network sockets.
     </p>
-    <div class="badges">
-      <span class="badge">v1.0.0</span>
-      <span class="badge">264 tests</span>
-      <span class="badge">MPL-2.0 · open core</span>
-      <span class="badge">Windows · Linux</span>
+    <div class="chips">
+      <span class="chip">v1.0.0</span>
+      <span class="chip"><b>264</b> tests passing</span>
+      <span class="chip">MPL-2.0 · open core</span>
+      <span class="chip">Windows · Linux</span>
     </div>
-    <div class="dl">
-      <a class="btn" href="https://github.com/Kasanki-Labs/Compakt/releases/latest">
-        Download for Windows <small>Compakt_Setup.exe · 38 MB</small>
+    <div class="actions">
+      <a class="btn btn-primary" href="https://github.com/Kasanki-Labs/Compakt/releases/latest">
+        Download for Windows<small>Compakt_Setup.exe · 37 MB</small>
       </a>
-      <a class="btn alt" href="https://github.com/Kasanki-Labs/Compakt/releases/latest">
-        Download for Linux <small>.deb or .tar.gz · command line</small>
+      <a class="btn btn-ghost" href="#install">
+        Install on Linux<small>.deb · tar.gz · command line</small>
       </a>
     </div>
   </div>
-</header>
+</div>
 
-<section>
+<section id="how">
   <div class="wrap">
+    <p class="eyebrow">How it works</p>
     <h2>Most archivers decide by filename. Compakt measures.</h2>
     <p>
       Every file is inspected before anything is compressed — magic bytes
       first, then the content itself: entropy, printable ratio, line
       structure, delimiter regularity. The extension is consulted last, as a
-      tiebreaker, and never overrides what the bytes say.
+      tiebreaker, and is never allowed to override what the bytes say.
     </p>
     <p>
       A SQLite database renamed <code>notes.txt</code> is packed as a
-      database. Already-compressed data with a misleading name is stored raw
-      instead of being pointlessly recompressed.
+      database. Already-compressed data wearing a misleading name is stored
+      raw instead of being pointlessly recompressed, because its measured
+      entropy gives it away.
     </p>
     <div class="grid">
       <div class="card">
+        <span class="n">01</span>
         <h3>Truncation is survivable</h3>
-        <p>The index is written at both ends of the file, so damage to either end can be recovered from the other.</p>
+        <p>The index is written at both ends of the file, so damage to
+           either end is recovered from the other.</p>
       </div>
       <div class="card">
+        <span class="n">02</span>
         <h3>Your filenames stay private</h3>
-        <p>With a password set, the index itself is encrypted — unlike ZIP, which leaves every filename, path and size readable to anyone holding the file.</p>
+        <p>With a password set, the index itself is encrypted — unlike ZIP,
+           which leaves every filename, path and size readable to anyone
+           holding the file.</p>
       </div>
       <div class="card">
+        <span class="n">03</span>
         <h3>Authentication before disclosure</h3>
-        <p>No plaintext reaches your disk before its AES-256-GCM tag verifies.</p>
+        <p>No plaintext reaches your disk before its AES-256-GCM tag
+           verifies.</p>
       </div>
       <div class="card">
+        <span class="n">04</span>
         <h3>Reproducible output</h3>
-        <p>Identical input produces a byte-identical archive on any machine — useful in build pipelines, and for proving two archives hold the same thing.</p>
+        <p>Identical input produces a byte-identical archive on any machine.
+           Useful in build pipelines, and for proving two archives hold the
+           same thing.</p>
+      </div>
+      <div class="card">
+        <span class="n">05</span>
+        <h3>Signed, if you want it</h3>
+        <p>Ed25519 signatures. Anyone with your public key can confirm an
+           archive came from you and has not been altered since.</p>
+      </div>
+      <div class="card">
+        <span class="n">06</span>
+        <h3>No version 2 to wait for</h3>
+        <p>Everything structural is defined in format 1.0. Unknown feature
+           flags are rejected loudly rather than guessed at.</p>
       </div>
     </div>
   </div>
 </section>
 
-<section>
+<section id="terminal">
   <div class="wrap">
-    <h2>It runs in your terminal too</h2>
+    <p class="eyebrow">Command line</p>
+    <h2>It runs in your terminal too.</h2>
     <p>
       Everything the window does, the <code>pakt</code> command does. On
-      Linux the command line <em>is</em> the product — there is no window.
+      Linux the command line <strong>is</strong> the product — there is no
+      window.
     </p>
-<pre><code>pakt c notes/ report.pdf -o backup.pakt   # create
-pakt x backup.pakt -d restored/          # extract
-pakt l backup.pakt                       # list
-pakt verify backup.pakt                  # check every hash</code></pre>
+<pre><code><span class="c-dim"># create, extract, list, check</span>
+pakt c notes/ report.pdf -o backup.pakt
+pakt x backup.pakt -d restored/
+pakt l backup.pakt
+pakt verify backup.pakt</code></pre>
     <p>
       Add <code>-p</code> to encrypt, or to open an encrypted archive — it
       prompts rather than taking the password on the command line, where
       every other process on the machine could read it. Add
       <code>--json</code> to any read command for output a script can parse.
       Exit codes are specific and stable, so a CI job can tell a wrong
-      password from a corrupt archive. <code>pakt --help</code> lists
-      everything.
+      password from a corrupt archive from a refused entry.
     </p>
   </div>
 </section>
 
-<section>
+<section id="benchmarks">
   <div class="wrap">
-    <h2>Benchmarks, with the losses next to the wins</h2>
-    <p class="muted">
-      Both compared against 7-Zip <code>-mx9</code>. Every corpus is public
-      or seeded, and <code>benchmarks/run.py</code> reproduces this on your
-      own machine.
+    <p class="eyebrow">Benchmarks</p>
+    <h2>The losses are published next to the wins.</h2>
+    <p>
+      Both measured against 7-Zip <code>-mx9</code>. Every corpus is public
+      or seeded from a fixed value, and <code>benchmarks/run.py</code>
+      reproduces this table on your own machine.
     </p>
     <div class="tablewrap">
       <table>
         <thead>
-          <tr><th>Corpus</th><th>Compakt</th><th>7-Zip</th><th>Result</th></tr>
+          <tr><th>Corpus</th><th>Compakt</th><th>7-Zip -mx9</th><th>Result</th></tr>
         </thead>
         <tbody>
           <tr>
@@ -182,122 +347,132 @@ pakt verify backup.pakt                  # check every hash</code></pre>
             <td>enwik8 — 95 MB, one text file</td>
             <td class="num">0.2545 · 80.3s</td>
             <td class="num">0.2480 · 81.0s</td>
-            <td>2.6% behind</td>
+            <td class="loss">2.6% behind</td>
           </tr>
         </tbody>
       </table>
     </div>
-    <p>
-      silesia is the corpus chosen because it switches off every structural
-      advantage Compakt has, so being ahead there is the result that
-      matters. enwik8 is a single large text file, where splitting into
-      64 MiB blocks costs more than the routing wins back. That trade was
-      made deliberately and it is not free.
+    <p style="margin-top:1.5rem">
+      silesia is the corpus chosen precisely because it switches off every
+      structural advantage Compakt has, so being ahead there is the result
+      that means something. enwik8 is a single large text file, where
+      splitting into 64 MiB blocks costs more than the routing wins back.
+      That trade was made deliberately, and it is not free.
     </p>
-    <p class="muted">
-      A note on photos and video: those are already compressed, so no
-      archiver — this one included — will shrink them meaningfully.
-      Compakt detects that and stores them raw rather than wasting your time.
+    <p>
+      <strong>On photos and video:</strong> those are already compressed, so
+      no archiver — this one included — will shrink them meaningfully.
+      Compakt detects that and stores them raw rather than wasting your
+      time pretending otherwise.
     </p>
   </div>
 </section>
 
-<section>
+<section id="local">
   <div class="wrap">
-    <h2>Local only, and you can check</h2>
+    <p class="eyebrow">Local only</p>
+    <h2>The claim is designed to be checked.</h2>
     <p>
       Compakt opens no network sockets, sends no telemetry and has no update
       checker. Every library in the stack is a pure codec — arithmetic on
-      bytes.
+      bytes, nothing more.
     </p>
     <p>You do not have to take that on trust:</p>
     <ul>
       <li>Block it in your firewall — it behaves identically.</li>
-      <li>Run it with the network unplugged, or in an air-gapped VM.</li>
+      <li>Run it with the network unplugged, or inside an air-gapped VM.</li>
       <li>Watch it with Wireshark, Resource Monitor or Little Snitch.</li>
     </ul>
     <p>
-      A security claim is only worth making if it can be checked from
-      outside the process.
+      A security claim is only worth making if it can be falsified from
+      outside the process. That is the only kind this project makes.
     </p>
   </div>
 </section>
 
-<section>
+<section id="install">
   <div class="wrap">
-    <h2>Installing on Windows: about that warning</h2>
-    <div class="note">
-      <h3>Windows will say “Windows protected your PC”.</h3>
+    <p class="eyebrow">Install</p>
+    <h2>Windows</h2>
+    <p>
+      Download <code>Compakt_Setup.exe</code> and run it. It installs for
+      your user only, so there is no administrator prompt, and it registers
+      the <code>.pakt</code> type, an Explorer right-click entry, and the
+      <code>pakt</code> command on your PATH.
+    </p>
+
+    <div class="callout">
+      <h3>Windows will say “Windows protected your PC”</h3>
       <p>
-        It will. Here is exactly why, and exactly how to check the download
-        rather than take anyone's word for it.
+        It will, and here is exactly why. The installer is not signed with a
+        code-signing certificate. Windows shows that warning for
+        <strong>every</strong> unsigned installer regardless of what is
+        inside it — it is a statement about a certificate, not about the
+        file. Compakt is built by one person, and a certificate costs money
+        that is going into the tool instead.
       </p>
       <p>
-        The installer is not signed with a code-signing certificate.
-        Windows shows that warning for <em>every</em> unsigned installer,
-        regardless of what is inside it — it is a statement about a
-        certificate, not about the file. Compakt is built by one person,
-        and a certificate costs money that is going into the tool instead.
-      </p>
-      <p>
-        <strong>So don't trust me — verify it.</strong> Every release
-        publishes a SHA-256 for each file. Compare it yourself:
+        <strong>So don't trust me. Check it.</strong> Every release publishes
+        a SHA-256 for each file:
       </p>
 <pre><code>certutil -hashfile Compakt_Setup.exe SHA256</code></pre>
-      <p class="muted" style="margin-bottom:0">
-        Match it against <code>SHA256SUMS</code> on the release page. If the
-        hashes agree, the file you have is the file that was published. To
-        proceed past the warning: <em>More info</em> → <em>Run anyway</em>.
+      <p>
+        Compare that against <code>SHA256SUMS</code> on the release page. If
+        they match, the file you have is the file that was published. To get
+        past the dialog: <strong>More info → Run anyway</strong>.
       </p>
     </div>
-    <p class="muted">
-      Linux has no equivalent gate. Verify there with
-      <code>sha256sum -c SHA256SUMS</code>.
-    </p>
-  </div>
-</section>
 
-<section>
-  <div class="wrap">
-    <h2>Installing on Linux</h2>
-    <p>The command line only — no window. Built against glibc 2.28, so it
-       runs on Debian 10, Ubuntu 18.04, RHEL 8 and anything newer.</p>
-    <h3>Debian, Ubuntu and derivatives</h3>
-<pre><code>sudo apt install ./compakt_1.0.0_amd64.deb
-pakt --version</code></pre>
-    <h3>Any distribution</h3>
-<pre><code>tar xzf pakt-1.0.0-linux-x86_64.tar.gz
-./pakt-1.0.0-linux-x86_64/pakt --version</code></pre>
-    <p class="muted">
+    <h2 style="margin-top:3rem">Linux</h2>
+    <p>
+      The <code>pakt</code> command line only — no window. Built against
+      glibc 2.28, so it runs on Debian 10, Ubuntu 18.04, RHEL 8 and anything
+      newer. Verified on a clean Ubuntu 22.04.
+    </p>
+<pre><code><span class="c-dim"># Debian, Ubuntu and derivatives</span>
+sudo apt install ./compakt_1.0.0_amd64.deb
+
+<span class="c-dim"># any distribution</span>
+tar xzf pakt-1.0.0-linux-x86_64.tar.gz
+./pakt-1.0.0-linux-x86_64/pakt --version
+
+<span class="c-dim"># verify what you downloaded</span>
+sha256sum -c SHA256SUMS</code></pre>
+    <p>
       There is deliberately no <code>curl … | sh</code> installer. Piping a
-      remote script into a shell is exactly the habit this tool argues
-      against.
+      remote script straight into a shell is precisely the habit this tool
+      argues against.
     </p>
   </div>
 </section>
 
-<section>
+<section id="opencore">
   <div class="wrap">
-    <h2>Open core — stated precisely</h2>
+    <p class="eyebrow">Licensing</p>
+    <h2>Open core, stated precisely.</h2>
     <div class="tablewrap">
       <table>
         <thead><tr><th>Component</th><th>Licence</th></tr></thead>
         <tbody>
-          <tr><td><code>.pakt</code> format spec + reference decoder</td><td>Apache-2.0</td></tr>
-          <tr><td>Detector, extractor, cryptography, socket guard, GUI, CLI, reference encoder</td><td>MPL-2.0</td></tr>
-          <tr><td>The routing engine — the per-block codec decision</td><td>proprietary</td></tr>
+          <tr><td><code>.pakt</code> format spec + reference decoder</td>
+              <td>Apache-2.0</td></tr>
+          <tr><td>Detector, extractor, cryptography, socket guard, GUI, CLI,
+                  reference encoder</td>
+              <td>MPL-2.0</td></tr>
+          <tr><td>The routing engine — the per-block codec decision</td>
+              <td>proprietary</td></tr>
         </tbody>
       </table>
     </div>
-    <p>
+    <p style="margin-top:1.75rem">
       Everything that could affect your safety is open and auditable. What
-      is closed is one file that decides which codec to call — which has no
-      bearing on whether Compakt is trustworthy, or on your ability to read
+      is closed is one file deciding which codec to call, which has no
+      bearing on whether Compakt is trustworthy or on your ability to read
       your own archives.
     </p>
     <p>
       <strong>No part of reading your archive is withheld.</strong> Where
-      the engine trains a compression dictionary it trains it from your own
+      the engine trains a compression dictionary, it trains it from your own
       files at pack time and writes it into the archive, because the format
       requires it: <em>“Dictionaries, if used, MUST be embedded, never
       referenced by id.”</em> There is no dictionary you need and cannot
@@ -306,21 +481,25 @@ pakt --version</code></pre>
     <p>
       <strong>The format is free.</strong> Implement <code>.pakt</code> in
       any language, for any purpose, commercially or not, without asking.
-      Every archive ever written stays readable by anyone, forever,
-      whatever happens to this project.
+      Every archive ever written stays readable by anyone, forever, whatever
+      happens to this project.
     </p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <p>
-      <a href="https://github.com/Kasanki-Labs/Compakt">Source</a> ·
-      <a href="https://github.com/Kasanki-Labs/Compakt/releases/latest">Releases</a> ·
-      <a href="https://github.com/Kasanki-Labs/Compakt/blob/main/docs/pakt-format-spec.md">Format specification</a> ·
+    <img class="footmark" src="kasanki-mark.png" alt="Kasanki Labs">
+    <div class="footlinks">
+      <a href="https://github.com/Kasanki-Labs/Compakt">Source</a>
+      <a href="https://github.com/Kasanki-Labs/Compakt/releases/latest">Releases</a>
+      <a href="https://github.com/Kasanki-Labs/Compakt/blob/main/docs/pakt-format-spec.md">Format specification</a>
       <a href="https://github.com/Kasanki-Labs/Compakt/blob/main/benchmarks/RESULTS.md">Benchmarks</a>
+      <a href="https://github.com/Kasanki-Labs/Compakt/blob/main/LICENSING.md">Licensing</a>
+    </div>
+    <p class="copy">
+      Copyright © 2026 Rounak Miskin · <b>Kasanki Labs</b>
     </p>
-    <p>Copyright © 2026 Rounak Miskin · Kasanki Labs</p>
   </div>
 </footer>
 
