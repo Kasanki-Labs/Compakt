@@ -96,15 +96,20 @@ Name: "{autodesktop}\{#AppName}"; Filename: "{app}\{#AppExe}"; \
 
 [Registry]
 ; --- .pakt association -------------------------------------------------
+; uninsdeletevalue removes the values but never the key, which left an
+; empty HKCU\Software\Classes\.pakt behind after an otherwise clean
+; uninstall -- measured, not assumed. uninsdeletekeyifempty removes the
+; key too, but only once nothing is left in it, so an association some
+; other program registered is never destroyed on our way out.
 ; Written under HKCU to match the per-user install. A machine-wide
 ; association would need administrator rights for no real benefit.
 Root: HKCU; Subkey: "Software\Classes\.pakt"; \
     ValueType: string; ValueName: ""; ValueData: "Compakt.Archive"; \
-    Flags: uninsdeletevalue; Tasks: associate
+    Flags: uninsdeletevalue uninsdeletekeyifempty; Tasks: associate
 Root: HKCU; Subkey: "Software\Classes\.pakt"; \
     ValueType: string; ValueName: "Content Type"; \
     ValueData: "application/x-pakt"; \
-    Flags: uninsdeletevalue; Tasks: associate
+    Flags: uninsdeletevalue uninsdeletekeyifempty; Tasks: associate
 Root: HKCU; Subkey: "Software\Classes\Compakt.Archive"; \
     ValueType: string; ValueName: ""; ValueData: "Compakt Archive"; \
     Flags: uninsdeletekey; Tasks: associate
