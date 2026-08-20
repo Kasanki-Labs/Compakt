@@ -12,7 +12,7 @@ Copyright (c) 2026 Rounak Miskin (Founder: Kasanki Labs)
 |---|---|---|
 | The `.pakt` format specification and reference decoder | Apache-2.0 | [`docs/LICENSE-SPEC`](docs/LICENSE-SPEC) |
 | This application — GUI, CLI, detector, extractor, crypto, socket guard, reference encoder | MPL-2.0 | [`LICENSE`](LICENSE) |
-| The compression routing engine and the trained dictionary corpus | Proprietary, all rights reserved | not in this repository |
+| The compression routing engine — the per-block codec decision | Proprietary, all rights reserved | not in this repository |
 
 ## The `.pakt` format — Apache-2.0
 
@@ -47,8 +47,16 @@ files come back; your own files stay yours.
 `core/compressor.py` — the routing engine that decides which codec
 handles which data, how files are grouped into solid blocks, when
 dictionaries are trained, and which transforms apply — is not in this
-repository and is not licensed for redistribution. Neither is the
-trained dictionary corpus it uses.
+repository and is not licensed for redistribution.
+
+**The dictionaries themselves are not proprietary and could not be.**
+There is no shipped dictionary corpus. Where the engine uses a
+compression dictionary it trains one from the files being packed, at
+pack time, and writes it into the archive — the format requires this and
+allows no alternative: *"Dictionaries, if used, MUST be embedded, never
+referenced by id."* So no archive can ever depend on data held back from
+you, and any conforming reader can open one without asking us for
+anything.
 
 **This repository still packs `.pakt` files.** `core/reference_encoder.py`
 is a complete, working encoder that produces valid archives using

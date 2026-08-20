@@ -5,7 +5,8 @@
 ; Built with Inno Setup 6. Compile with:
 ;     iscc build\installer.iss
 ;
-; Expects build\dist\Compakt and build\dist\pakt to exist -- run
+; Expects build\dist\windows\Compakt and build\dist\windows\pakt
+; to exist -- run
 ; build\build.py first.
 ;
 ; NOT SIGNED. An unsigned installer trips Windows SmartScreen with
@@ -77,9 +78,9 @@ Name: "addtopath"; Description: \
     GroupDescription: "Command line:"
 
 [Files]
-Source: "dist\Compakt\*"; DestDir: "{app}"; \
+Source: "dist\windows\Compakt\*"; DestDir: "{app}"; \
     Flags: ignoreversion recursesubdirs createallsubdirs
-Source: "dist\pakt\*"; DestDir: "{app}\cli"; \
+Source: "dist\windows\pakt\*"; DestDir: "{app}\cli"; \
     Flags: ignoreversion recursesubdirs createallsubdirs
 Source: "..\LICENSE"; DestDir: "{app}"; Flags: ignoreversion
 Source: "..\LICENSING.md"; DestDir: "{app}"; Flags: ignoreversion

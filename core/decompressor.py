@@ -96,7 +96,19 @@ def _bundled_libarchive() -> Optional[str]:
         base = getattr(sys, "_MEIPASS", os.path.dirname(sys.executable))
     else:
         base = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    for name in ("archive.dll", "libarchive.so", "libarchive.dylib"):
+    # Only this platform's library. Accepting any of the three meant a
+    # Linux build that had wrongly bundled the Windows DLL would find
+    # `archive.dll`, point LIBARCHIVE at it, and lose every Tier 2 format
+    # -- while the system libarchive sat there, loadable, unused. The
+    # build no longer bundles foreign libraries; this is the second lock.
+    if sys.platform == "win32":
+        names = ("archive.dll",)
+    elif sys.platform == "darwin":
+        names = ("libarchive.dylib",)
+    else:
+        names = ("libarchive.so",)
+
+    for name in names:
         candidate = os.path.join(base, "app", "assets", "native", name)
         if os.path.exists(candidate):
             return candidate

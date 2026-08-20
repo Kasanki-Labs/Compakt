@@ -6,10 +6,15 @@ A local-first archiver that routes files to different codecs by
 measuring what they actually contain, packs them into a custom
 container with authenticated encryption, and never opens a socket.
 
-> **Status: pre-alpha.** The format specification is frozen and the
-> detector is implemented and tested. The compressor, extractor, GUI
-> and CLI are not built yet. Nothing here is usable as a tool. Do not
-> trust it with data you care about.
+> **Status: 1.0.0, first release.** The format specification is frozen.
+> The detector, compressor, extractor, cryptography, container, GUI and
+> command line are all implemented, with 264 tests passing. Benchmarks
+> against 7-Zip, zstd, xz and tar are published below.
+>
+> It is a first release and has not yet been run by many people on many
+> machines. Keep your originals until you have verified an archive
+> yourself — `pakt verify` checks every file against its recorded
+> SHA-256.
 
 ---
 
@@ -58,13 +63,20 @@ Being precise about this up front, because the distinction matters.
 |---|---|
 | `.pakt` format spec + reference decoder | Apache-2.0 |
 | This repository — detector, extractor, crypto, socket guard, GUI, CLI, reference encoder | MPL-2.0 |
-| The compression routing engine and trained dictionary corpus | proprietary, not published |
+| The compression routing engine — the per-block codec decision | proprietary, not published |
 
 Everything that could hurt you is open and auditable. What is closed is
 one file that decides which codec to call, which has no bearing on
 whether Compakt is trustworthy or on your ability to read your own
 archives — `core/reference_encoder.py` in this repository is a real,
 working encoder that produces valid `.pakt` files.
+
+**No part of reading your archive is withheld.** Where the engine trains
+a compression dictionary, it trains it from your own files at pack time
+and writes it into the archive: the format requires it, in as many words
+— *"Dictionaries, if used, MUST be embedded, never referenced by id"*
+([spec §Dictionaries](docs/pakt-format-spec.md)). There is no dictionary
+corpus you need and cannot have, and there never can be one.
 
 **The format is free.** Implement `.pakt` in any language, for any
 purpose, commercially or not, without asking. Every archive ever
@@ -104,10 +116,27 @@ independent `.pakt` implementations are all welcome.
 
 ## Benchmarks
 
-Not published yet. When they are, they will include a reproducible
-corpus and a results table showing **wins and losses**, with the script
-so anyone can run it themselves. Any performance claim made before that
-exists should be treated as marketing, including by us.
+Published, with the losses beside the wins:
+[`benchmarks/RESULTS.md`](benchmarks/RESULTS.md). Every corpus is
+fetched from a public source, rebuilt from pinned dependencies, or
+generated from a fixed seed, and `benchmarks/run.py` reproduces the
+table on your own machine.
+
+Two results worth quoting, both against **7-Zip `-mx9`**:
+
+| Corpus | Compakt | 7-Zip | |
+|---|---|---|---|
+| silesia (202 MB) | **0.2288** in 53.7s | 0.2297 in 83.2s | **0.4% smaller**, and faster |
+| enwik8 (95 MB) | 0.2545 in 80.3s | 0.2480 in 81.0s | **2.6% behind** |
+
+silesia is the corpus chosen because it switches off every structural
+advantage Compakt has, so being ahead there is the result that matters.
+enwik8 is a single 95 MB text file, where splitting into 64 MiB blocks
+costs more than the routing wins back — that trade was made deliberately
+and is not free.
+
+Ratios are deterministic and reproducible. Timings come from one machine
+and will vary with yours.
 
 ---
 

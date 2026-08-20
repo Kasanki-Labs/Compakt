@@ -38,8 +38,17 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.dirname(HERE)
-DIST = os.path.join(HERE, "dist")
-WORK = os.path.join(HERE, "work")
+#: Frozen output, kept apart per platform.
+#:
+#: Both platforms build from the same working tree -- the Linux build
+#: runs in a container with this directory mounted -- and a shared
+#: build/dist meant the Linux run deleted the Windows binaries mid-build.
+#: The dangerous version of that is quieter: installer.iss picks up
+#: whatever sits in dist/, so with different timing it would package a
+#: Linux ELF into a Windows installer and only fail on a user's machine.
+_PLATFORM = "windows" if os.name == "nt" else "linux"
+DIST = os.path.join(HERE, "dist", _PLATFORM)
+WORK = os.path.join(HERE, "work", _PLATFORM)
 
 ICON = os.path.join(REPO, "app", "assets", "compakt.ico")
 
@@ -93,15 +102,29 @@ EXCLUDE = [
 #: megabytes are not worth a broken build.
 
 
+#: Shared-library suffixes worth bundling, per platform.
+#:
+#: Filtering by platform is not tidiness. app/assets/native holds the
+#: Windows DLLs built by native.py, and a Linux build that swept them up
+#: shipped 1.6 MB of unloadable PE files -- then FAILED, because
+#: core.decompressor looks for `archive.dll` first, found the bundled
+#: one, pointed LIBARCHIVE at it, and libarchive-c could not load a PE
+#: image on Linux. Tier 2 reported "unavailable" on a machine with a
+#: perfectly good libarchive installed.
+_SUFFIXES = {"nt": (".dll",)}
+_DEFAULT_SUFFIXES = (".so", ".dylib")
+
+
 def native_libraries() -> list[str]:
-    """Every shared library in app/assets/native, in a stable order."""
+    """Shared libraries in app/assets/native loadable on THIS platform."""
     if not os.path.isdir(NATIVE_DIR):
         return []
+    suffixes = _SUFFIXES.get(os.name, _DEFAULT_SUFFIXES)
     return sorted(
         os.path.join(NATIVE_DIR, name)
         for name in os.listdir(NATIVE_DIR)
-        if name.lower().endswith((".dll", ".so", ".dylib"))
-        or ".so." in name.lower())
+        if name.lower().endswith(suffixes)
+        or (".so." in name.lower() and ".so" in suffixes))
 
 
 def engine_present() -> str | None:
@@ -160,7 +183,7 @@ def build_gui() -> None:
 
 
 def build_cli() -> None:
-    print("building pakt.exe (console)")
+    print(f"building pakt{'.exe' if os.name == 'nt' else ''} (console)")
     run(_common("pakt", "pakt.py", windowed=False))
 
 
@@ -181,7 +204,8 @@ def report(built: tuple[str, ...] = ("Compakt", "pakt")) -> None:
         total = sum(
             os.path.getsize(os.path.join(base, f))
             for base, _d, files in os.walk(folder) for f in files)
-        exe = os.path.join(folder, f"{name}.exe")
+        suffix = ".exe" if os.name == "nt" else ""
+        exe = os.path.join(folder, f"{name}{suffix}")
         print(f"  {name:<9} {total / 1024 / 1024:>6.1f} MB"
               f"   exe present: {os.path.exists(exe)}")
 

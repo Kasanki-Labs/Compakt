@@ -945,7 +945,9 @@ You deserve better compression.
 
 * Copyright (c) 2026 Rounak Miskin (Founder: Kasanki Labs)
 
-Open core. The .pakt format specification and reference decoder are Apache-2.0, so anyone may implement the format. The application is MPL-2.0. The compression routing engine and its trained dictionaries are proprietary.
+Open core. The .pakt format specification and reference decoder are Apache-2.0, so anyone may implement the format. The application is MPL-2.0. The compression routing engine -- the one file deciding which codec handles which block -- is proprietary.
+
+The dictionaries are not. Where a compression dictionary is used it is trained from your own files as they are packed and written into the archive, because the format requires it. No archive depends on anything withheld from you.
 
 Everything that could affect your safety is open and auditable: detection, extraction, the cryptography, and the socket guard. What is closed is the one file that decides which codec to call, which has no bearing on whether Compakt is trustworthy, or on your ability to read your own archives.
 """,

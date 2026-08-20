@@ -15,6 +15,7 @@ venv/
 build/dist/
 build/work/
 build/installer/
+build/release/
 dist/
 *.spec
 
