@@ -22,10 +22,30 @@ dist/
 # build/native.py unpacks and compiles the Tier 2 libraries here. It is
 # fetched-and-verified third-party source plus CMake output -- 132 MB of
 # it, and every generated Makefile records the ABSOLUTE build path, so
-# committing it would publish the build machine's directory layout. The
-# DLLs it produces are installed to app/assets/native/ and those ARE
-# committed; this tree is reproducible from native.py whenever needed.
+# committing it would publish the build machine's directory layout. This
+# tree is reproducible from native.py whenever it is needed.
 build/thirdparty/
+
+# --- Tier 2 shared libraries: BUILT, never committed ------------------
+# native.py compiles these from upstream source pinned by SHA-256 and
+# installs them here. They are deliberately not in version control, for
+# the reason native.py states in full: a prebuilt binary inside a
+# security tool is one nobody can account for, and "a suspicious user
+# can run this script and compare" only holds while the comparison is
+# possible. A committed DLL removes it -- the reader would have to trust
+# that our binary matches the pinned sources, which makes us the random
+# host that argument was written against.
+#
+# There is a practical half too. These are Windows DLLs, useless on
+# Linux, and having them in the tree is exactly what caused a Linux
+# build to bundle them and lose every Tier 2 format.
+#
+# Cost: cloning and building on Windows yields Tier 1 only until
+# native.py is run. The application says so plainly rather than failing
+# oddly -- `pakt formats` reports "tier 2: unavailable" and names what
+# is missing. Anyone building from source can run one script; everyone
+# else installs a release, which ships them.
+app/assets/native/
 
 # --- generated benchmark input ---
 # benchmarks/corpus.py builds these from pinned or seeded inputs. They
@@ -42,11 +62,6 @@ benchmarks/corpora/
 *.pyd
 *.so
 *.c
-
-# --- spike artefacts (throwaway by definition) ---
-spikes/build/
-spikes/dist/
-spikes/*.spec
 
 # --- proprietary: must never enter the public repository ---
 # The routing engine and the trained dictionary corpus live in the
