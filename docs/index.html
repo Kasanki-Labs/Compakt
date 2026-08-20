@@ -66,7 +66,7 @@ a{color:inherit}
 /* ---------- hero ---------- */
 .hero{
   position:relative;overflow:hidden;
-  padding:clamp(4rem,11vw,8rem) 0 clamp(3.5rem,8vw,6rem);
+  padding:clamp(2rem,5vw,3.25rem) 0 clamp(3.5rem,8vw,5.5rem);
   text-align:center;border-bottom:1px solid var(--hairline);
 }
 .hero::before{
@@ -77,8 +77,8 @@ a{color:inherit}
 }
 .hero > .wrap{position:relative}
 .mark{
-  width:clamp(72px,13vw,104px);height:auto;display:block;
-  margin:0 auto 1.75rem;
+  width:clamp(64px,11vw,92px);height:auto;display:block;
+  margin:0 auto 1.25rem;
 }
 h1{
   font-size:clamp(3rem,9vw,5.25rem);font-weight:700;letter-spacing:-.045em;
@@ -86,7 +86,7 @@ h1{
 }
 .slogan{
   font-size:clamp(1.1rem,2.7vw,1.45rem);font-weight:500;
-  letter-spacing:-.015em;margin-bottom:1.25rem;
+  letter-spacing:-.015em;margin:0 auto 1.25rem;max-width:none;
 }
 .lede{
   color:var(--dim);max-width:36rem;margin:0 auto 2.25rem;
@@ -189,7 +189,7 @@ footer{padding:3.5rem 0 4.5rem;text-align:center}
 .footlinks a{font-size:.86rem;color:var(--dim);text-decoration:none;
   transition:color .15s ease}
 .footlinks a:hover{color:var(--text)}
-.copy{font-size:.78rem;color:var(--faint)}
+.copy{font-size:.78rem;color:var(--faint);max-width:none;margin-inline:auto}
 .copy b{color:var(--dim);font-weight:500}
 </style>
 </head>
@@ -217,9 +217,11 @@ footer{padding:3.5rem 0 4.5rem;text-align:center}
     <h1>Compakt</h1>
     <p class="slogan">You deserve better compression.</p>
     <p class="lede">
-      An archiver that reads the bytes of every file before compressing it,
-      routing each one by what it measurably contains rather than by its
-      name. It opens no network sockets.
+      Your files are nobody else's business. Compakt runs entirely on your
+      own machine — no sockets, no telemetry, no account, nothing uploaded
+      to be processed — and when you ask it to encrypt, it encrypts the file
+      listing too, which most archivers leave readable to anyone holding the
+      archive.
     </p>
     <div class="chips">
       <span class="chip">v1.0.0</span>
