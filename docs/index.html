@@ -151,6 +151,11 @@ p code,li code{background:var(--raised);padding:.12em .4em;border-radius:.25rem;
 pre code{background:none;padding:0}
 .c-dim{color:var(--faint)}
 
+.summary{
+  color:var(--text);font-size:clamp(1.05rem,2.2vw,1.25rem);font-weight:500;
+  letter-spacing:-.015em;max-width:34ch;
+}
+
 /* ---------- table ---------- */
 .tablewrap{overflow-x:auto;margin-top:1.75rem;border:1px solid var(--hairline);
   border-radius:.75rem}
@@ -452,6 +457,9 @@ sha256sum -c SHA256SUMS</code></pre>
   <div class="wrap">
     <p class="eyebrow">Licensing</p>
     <h2>Open core, stated precisely.</h2>
+    <p class="summary">
+      The format is free forever. The application is open. One file is not.
+    </p>
     <div class="tablewrap">
       <table>
         <thead><tr><th>Component</th><th>Licence</th></tr></thead>
