@@ -1,0 +1,61 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# --- environments ---
+.venv/
+venv/
+
+# --- build output ---
+# NOT `build/` wholesale: build/build.py, build/native.py and
+# build/installer.iss are source and must be committed. Only the
+# generated output is ignored.
+build/dist/
+build/work/
+build/installer/
+dist/
+*.spec
+
+# build/native.py unpacks and compiles the Tier 2 libraries here. It is
+# fetched-and-verified third-party source plus CMake output -- 132 MB of
+# it, and every generated Makefile records the ABSOLUTE build path, so
+# committing it would publish the build machine's directory layout. The
+# DLLs it produces are installed to app/assets/native/ and those ARE
+# committed; this tree is reproducible from native.py whenever needed.
+build/thirdparty/
+
+# --- generated benchmark input ---
+# benchmarks/corpus.py builds these from pinned or seeded inputs. They
+# are INPUT to the harness, not results: sourcetree is a copy of this
+# very source tree and sitepackages a copy of the venv, so committing
+# them would duplicate the repository inside itself. RESULTS.md and
+# results.json are the outputs worth keeping and are NOT ignored.
+benchmarks/corpora/
+
+# --- compiled engine ---
+# The .pyd and the C it is generated from are proprietary output. The
+# C in particular is a near-complete transcription of the engine source
+# and must never reach the public repository.
+*.pyd
+*.so
+*.c
+
+# --- spike artefacts (throwaway by definition) ---
+spikes/build/
+spikes/dist/
+spikes/*.spec
+
+# --- proprietary: must never enter the public repository ---
+# The routing engine and the trained dictionary corpus live in the
+# private compakt-engine repository. These entries are a backstop in
+# case anyone copies one in by accident.
+core/compressor.py
+dictionaries/
+*.pakt-dict
+
+# --- local ---
+.vscode/
+.idea/
+*.log

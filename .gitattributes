@@ -1,0 +1,23 @@
+# Line endings.
+#
+# Compakt is developed on Windows and built on Linux, so the repository
+# normalises to LF and lets each checkout decide. Two exceptions: .bat
+# files are read by cmd.exe, which mishandles LF-only, and Inno Setup
+# scripts are conventionally CRLF.
+#
+# Getting this wrong is not cosmetic. A shell script or Makefile checked
+# out with CRLF fails on Linux with an unhelpful "bad interpreter" or
+# "command not found", which is a bad hour to spend.
+
+* text=auto eol=lf
+
+*.bat text eol=crlf
+*.iss text eol=crlf
+
+# Binary: never normalise, never diff as text.
+*.png  binary
+*.ico  binary
+*.dll  binary
+*.so   binary
+*.pyd  binary
+*.pakt binary

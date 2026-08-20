@@ -1,0 +1,897 @@
+{
+  "threads": 8,
+  "sevenzip": true,
+  "runs": [
+    {
+      "corpus": "silesia",
+      "kind": "standard",
+      "tests": "General-purpose ratio on large single files. UNFAVOURABLE to us: nothing for solid blocks or dedup to exploit.",
+      "files": 12,
+      "bytes": 211938580,
+      "results": [
+        {
+          "tool": "compakt",
+          "corpus": "silesia",
+          "ok": true,
+          "stored": 48501697,
+          "pack_seconds": 53.681559999939054,
+          "unpack_seconds": 4.294534099986777,
+          "note": "",
+          "index_share": 3.7565695897197164e-05
+        },
+        {
+          "tool": "compakt-fast",
+          "corpus": "silesia",
+          "ok": true,
+          "stored": 56911214,
+          "pack_seconds": 11.218270999961533,
+          "unpack_seconds": 5.454279399942607,
+          "note": "",
+          "index_share": 3.2049922533720684e-05
+        },
+        {
+          "tool": "compakt-ref",
+          "corpus": "silesia",
+          "ok": true,
+          "stored": 59954209,
+          "pack_seconds": 131.0719377999194,
+          "unpack_seconds": 1.2957162000238895,
+          "note": "",
+          "index_share": 6.168040679179005e-05
+        },
+        {
+          "tool": "7z-mx5",
+          "corpus": "silesia",
+          "ok": true,
+          "stored": 49597377,
+          "pack_seconds": 41.46014850004576,
+          "unpack_seconds": 1.4966254000319168,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "7z-mx9",
+          "corpus": "silesia",
+          "ok": true,
+          "stored": 48688207,
+          "pack_seconds": 83.17237320006825,
+          "unpack_seconds": 2.279376200051047,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "zip",
+          "corpus": "silesia",
+          "ok": true,
+          "stored": 64727209,
+          "pack_seconds": 54.6995273999637,
+          "unpack_seconds": 1.3601435999153182,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.zst",
+          "corpus": "silesia",
+          "ok": true,
+          "stored": 52853852,
+          "pack_seconds": 41.96334670006763,
+          "unpack_seconds": 0.9570991999935359,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.xz",
+          "corpus": "silesia",
+          "ok": true,
+          "stored": 48759660,
+          "pack_seconds": 139.81121840002015,
+          "unpack_seconds": 4.3485592000652105,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.gz",
+          "corpus": "silesia",
+          "ok": true,
+          "stored": 67584673,
+          "pack_seconds": 11.954343600082211,
+          "unpack_seconds": 0.8368847999954596,
+          "note": "",
+          "index_share": 0.0
+        }
+      ]
+    },
+    {
+      "corpus": "enwik8",
+      "kind": "standard",
+      "tests": "Single large text file. Pure codec quality, no structural advantage available.",
+      "files": 1,
+      "bytes": 100000000,
+      "results": [
+        {
+          "tool": "compakt",
+          "corpus": "enwik8",
+          "ok": true,
+          "stored": 25448918,
+          "pack_seconds": 80.2684348000912,
+          "unpack_seconds": 2.3908416000194848,
+          "note": "",
+          "index_share": 1.9882967126539525e-05
+        },
+        {
+          "tool": "compakt-fast",
+          "corpus": "enwik8",
+          "ok": true,
+          "stored": 32609025,
+          "pack_seconds": 16.151107700075954,
+          "unpack_seconds": 2.523461800068617,
+          "note": "",
+          "index_share": 1.5517176609849575e-05
+        },
+        {
+          "tool": "compakt-ref",
+          "corpus": "enwik8",
+          "ok": true,
+          "stored": 26397222,
+          "pack_seconds": 198.06483819999266,
+          "unpack_seconds": 0.9382756999693811,
+          "note": "",
+          "index_share": 2.6290645280779924e-05
+        },
+        {
+          "tool": "7z-mx5",
+          "corpus": "enwik8",
+          "ok": true,
+          "stored": 25399287,
+          "pack_seconds": 70.14201040007174,
+          "unpack_seconds": 1.185254400013946,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "7z-mx9",
+          "corpus": "enwik8",
+          "ok": true,
+          "stored": 24799506,
+          "pack_seconds": 81.00492919993121,
+          "unpack_seconds": 1.2631963000167161,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "zip",
+          "corpus": "enwik8",
+          "ok": true,
+          "stored": 35103522,
+          "pack_seconds": 85.07766989991069,
+          "unpack_seconds": 0.8739353999262676,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.zst",
+          "corpus": "enwik8",
+          "ok": true,
+          "stored": 26944900,
+          "pack_seconds": 42.739619500003755,
+          "unpack_seconds": 0.6511547999689355,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.xz",
+          "corpus": "enwik8",
+          "ok": true,
+          "stored": 24864868,
+          "pack_seconds": 130.09046620002482,
+          "unpack_seconds": 2.0387998999794945,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.gz",
+          "corpus": "enwik8",
+          "ok": true,
+          "stored": 36493556,
+          "pack_seconds": 6.525240299990401,
+          "unpack_seconds": 0.44543680001515895,
+          "note": "",
+          "index_share": 0.0
+        }
+      ]
+    },
+    {
+      "corpus": "sitepackages",
+      "kind": "reproducible",
+      "tests": "Many small real files of mixed type. The shape solid blocks exist for.",
+      "files": 4027,
+      "bytes": 66948202,
+      "results": [
+        {
+          "tool": "compakt",
+          "corpus": "sitepackages",
+          "ok": true,
+          "stored": 14229864,
+          "pack_seconds": 38.30006359994877,
+          "unpack_seconds": 18.58421100000851,
+          "note": "",
+          "index_share": 0.018871719364289077
+        },
+        {
+          "tool": "compakt-fast",
+          "corpus": "sitepackages",
+          "ok": true,
+          "stored": 16139071,
+          "pack_seconds": 23.155151800019667,
+          "unpack_seconds": 18.509841799968854,
+          "note": "",
+          "index_share": 0.01663961946756415
+        },
+        {
+          "tool": "compakt-ref",
+          "corpus": "sitepackages",
+          "ok": true,
+          "stored": 19324287,
+          "pack_seconds": 53.630255999974906,
+          "unpack_seconds": 11.106640700018033,
+          "note": "",
+          "index_share": 0.07396950790474184
+        },
+        {
+          "tool": "7z-mx5",
+          "corpus": "sitepackages",
+          "ok": true,
+          "stored": 14300661,
+          "pack_seconds": 21.16707209998276,
+          "unpack_seconds": 9.327903000055812,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "7z-mx9",
+          "corpus": "sitepackages",
+          "ok": true,
+          "stored": 14132349,
+          "pack_seconds": 19.219608700019307,
+          "unpack_seconds": 8.82283630000893,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "zip",
+          "corpus": "sitepackages",
+          "ok": true,
+          "stored": 24125155,
+          "pack_seconds": 10.764665399910882,
+          "unpack_seconds": 10.256741599994712,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.zst",
+          "corpus": "sitepackages",
+          "ok": true,
+          "stored": 15378706,
+          "pack_seconds": 24.865928699960932,
+          "unpack_seconds": 11.146165400044993,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.xz",
+          "corpus": "sitepackages",
+          "ok": true,
+          "stored": 14223448,
+          "pack_seconds": 44.36481940001249,
+          "unpack_seconds": 11.708102500066161,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.gz",
+          "corpus": "sitepackages",
+          "ok": true,
+          "stored": 22896287,
+          "pack_seconds": 6.129380799946375,
+          "unpack_seconds": 10.599474400049075,
+          "note": "",
+          "index_share": 0.0
+        }
+      ]
+    },
+    {
+      "corpus": "sourcetree",
+      "kind": "reproducible",
+      "tests": "A small, ordinary developer folder.",
+      "files": 39,
+      "bytes": 2135156,
+      "results": [
+        {
+          "tool": "compakt",
+          "corpus": "sourcetree",
+          "ok": true,
+          "stored": 733970,
+          "pack_seconds": 1.5741716000484303,
+          "unpack_seconds": 0.16997839999385178,
+          "note": "",
+          "index_share": 0.005512486886385002
+        },
+        {
+          "tool": "compakt-fast",
+          "corpus": "sourcetree",
+          "ok": true,
+          "stored": 790040,
+          "pack_seconds": 0.6773575999541208,
+          "unpack_seconds": 0.18221049988642335,
+          "note": "",
+          "index_share": 0.005121259683054023
+        },
+        {
+          "tool": "compakt-ref",
+          "corpus": "sourcetree",
+          "ok": true,
+          "stored": 807914,
+          "pack_seconds": 1.2396779999835417,
+          "unpack_seconds": 0.18809219996910542,
+          "note": "",
+          "index_share": 0.017430073002819606
+        },
+        {
+          "tool": "7z-mx5",
+          "corpus": "sourcetree",
+          "ok": true,
+          "stored": 732837,
+          "pack_seconds": 0.37720220000483096,
+          "unpack_seconds": 0.15573980007320642,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "7z-mx9",
+          "corpus": "sourcetree",
+          "ok": true,
+          "stored": 718285,
+          "pack_seconds": 0.456934200017713,
+          "unpack_seconds": 0.1607605000026524,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "zip",
+          "corpus": "sourcetree",
+          "ok": true,
+          "stored": 903188,
+          "pack_seconds": 0.6314060000004247,
+          "unpack_seconds": 0.12493279995396733,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.zst",
+          "corpus": "sourcetree",
+          "ok": true,
+          "stored": 800303,
+          "pack_seconds": 1.1912448999937624,
+          "unpack_seconds": 0.14578709995839745,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.xz",
+          "corpus": "sourcetree",
+          "ok": true,
+          "stored": 753432,
+          "pack_seconds": 1.0303102999459952,
+          "unpack_seconds": 0.20172519993502647,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.gz",
+          "corpus": "sourcetree",
+          "ok": true,
+          "stored": 913207,
+          "pack_seconds": 0.17274069995619357,
+          "unpack_seconds": 0.15666849992703646,
+          "note": "",
+          "index_share": 0.0
+        }
+      ]
+    },
+    {
+      "corpus": "jsonlogs",
+      "kind": "generated",
+      "tests": "Many small structured files. Best case for solid blocks; synthetic, so treat the margin as an upper bound.",
+      "files": 8000,
+      "bytes": 1694261,
+      "results": [
+        {
+          "tool": "compakt",
+          "corpus": "jsonlogs",
+          "ok": true,
+          "stored": 630985,
+          "pack_seconds": 14.4558816999197,
+          "unpack_seconds": 17.5013688999461,
+          "note": "",
+          "index_share": 0.6587256432403306
+        },
+        {
+          "tool": "compakt-fast",
+          "corpus": "jsonlogs",
+          "ok": true,
+          "stored": 689791,
+          "pack_seconds": 13.170755899976939,
+          "unpack_seconds": 18.82943499996327,
+          "note": "",
+          "index_share": 0.6025680242276283
+        },
+        {
+          "tool": "compakt-ref",
+          "corpus": "jsonlogs",
+          "ok": true,
+          "stored": 3666368,
+          "pack_seconds": 21.329528699978255,
+          "unpack_seconds": 18.834354100050405,
+          "note": "",
+          "index_share": 0.6766096583867195
+        },
+        {
+          "tool": "7z-mx5",
+          "corpus": "jsonlogs",
+          "ok": true,
+          "stored": 283690,
+          "pack_seconds": 1.5192607999779284,
+          "unpack_seconds": 10.427087100106291,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "7z-mx9",
+          "corpus": "jsonlogs",
+          "ok": true,
+          "stored": 270351,
+          "pack_seconds": 1.7478812000481412,
+          "unpack_seconds": 10.99648159998469,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "zip",
+          "corpus": "jsonlogs",
+          "ok": true,
+          "stored": 2467369,
+          "pack_seconds": 1.0179277999559417,
+          "unpack_seconds": 10.767221500049345,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.zst",
+          "corpus": "jsonlogs",
+          "ok": true,
+          "stored": 378151,
+          "pack_seconds": 6.790873900055885,
+          "unpack_seconds": 20.500929900095798,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.xz",
+          "corpus": "jsonlogs",
+          "ok": true,
+          "stored": 352124,
+          "pack_seconds": 6.144967900007032,
+          "unpack_seconds": 18.66225769999437,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.gz",
+          "corpus": "jsonlogs",
+          "ok": true,
+          "stored": 526412,
+          "pack_seconds": 3.0319210999878123,
+          "unpack_seconds": 14.152351600001566,
+          "note": "",
+          "index_share": 0.0
+        }
+      ]
+    },
+    {
+      "corpus": "sourcelike",
+      "kind": "generated",
+      "tests": "Cross-file structural repetition.",
+      "files": 1200,
+      "bytes": 1313166,
+      "results": [
+        {
+          "tool": "compakt",
+          "corpus": "sourcelike",
+          "ok": true,
+          "stored": 71743,
+          "pack_seconds": 2.517985000042245,
+          "unpack_seconds": 2.662747999886051,
+          "note": "",
+          "index_share": 0.9217902791910012
+        },
+        {
+          "tool": "compakt-fast",
+          "corpus": "sourcelike",
+          "ok": true,
+          "stored": 71901,
+          "pack_seconds": 2.4743700999533758,
+          "unpack_seconds": 2.7956345999846235,
+          "note": "",
+          "index_share": 0.9197646764300914
+        },
+        {
+          "tool": "compakt-ref",
+          "corpus": "sourcelike",
+          "ok": true,
+          "stored": 625272,
+          "pack_seconds": 3.900387999950908,
+          "unpack_seconds": 2.7222852000268176,
+          "note": "",
+          "index_share": 0.5954528589157998
+        },
+        {
+          "tool": "7z-mx5",
+          "corpus": "sourcelike",
+          "ok": true,
+          "stored": 16264,
+          "pack_seconds": 0.22420579998288304,
+          "unpack_seconds": 1.220315899932757,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "7z-mx9",
+          "corpus": "sourcelike",
+          "ok": true,
+          "stored": 16214,
+          "pack_seconds": 0.21884280000813305,
+          "unpack_seconds": 1.49353420000989,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "zip",
+          "corpus": "sourcelike",
+          "ok": true,
+          "stored": 485596,
+          "pack_seconds": 0.2484863999998197,
+          "unpack_seconds": 1.722373399999924,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.zst",
+          "corpus": "sourcelike",
+          "ok": true,
+          "stored": 22187,
+          "pack_seconds": 0.9123415999347344,
+          "unpack_seconds": 3.06193099997472,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.xz",
+          "corpus": "sourcelike",
+          "ok": true,
+          "stored": 18992,
+          "pack_seconds": 0.9729300000471994,
+          "unpack_seconds": 3.1735594000201672,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.gz",
+          "corpus": "sourcelike",
+          "ok": true,
+          "stored": 37794,
+          "pack_seconds": 0.6340341999894008,
+          "unpack_seconds": 3.0435934000415727,
+          "note": "",
+          "index_share": 0.0
+        }
+      ]
+    },
+    {
+      "corpus": "widecsv",
+      "kind": "generated",
+      "tests": "Columnar regularity in a single large file.",
+      "files": 1,
+      "bytes": 35828570,
+      "results": [
+        {
+          "tool": "compakt",
+          "corpus": "widecsv",
+          "ok": true,
+          "stored": 12787251,
+          "pack_seconds": 59.61439720005728,
+          "unpack_seconds": 0.9572469000704587,
+          "note": "",
+          "index_share": 3.800660517260512e-05
+        },
+        {
+          "tool": "compakt-fast",
+          "corpus": "widecsv",
+          "ok": true,
+          "stored": 14513567,
+          "pack_seconds": 4.135174200055189,
+          "unpack_seconds": 0.8577717000152916,
+          "note": "",
+          "index_share": 3.348591011430891e-05
+        },
+        {
+          "tool": "compakt-ref",
+          "corpus": "widecsv",
+          "ok": true,
+          "stored": 13894299,
+          "pack_seconds": 30.894271500059403,
+          "unpack_seconds": 0.2071537000592798,
+          "note": "",
+          "index_share": 4.1311907855156995e-05
+        },
+        {
+          "tool": "7z-mx5",
+          "corpus": "widecsv",
+          "ok": true,
+          "stored": 12827234,
+          "pack_seconds": 34.08341839991044,
+          "unpack_seconds": 0.6954243999207392,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "7z-mx9",
+          "corpus": "widecsv",
+          "ok": true,
+          "stored": 12829308,
+          "pack_seconds": 37.51324260002002,
+          "unpack_seconds": 0.7082315000006929,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "zip",
+          "corpus": "widecsv",
+          "ok": true,
+          "stored": 13961006,
+          "pack_seconds": 18.423940500011668,
+          "unpack_seconds": 0.3351682999636978,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.zst",
+          "corpus": "widecsv",
+          "ok": true,
+          "stored": 13586636,
+          "pack_seconds": 44.07847239996772,
+          "unpack_seconds": 0.1426721999887377,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.xz",
+          "corpus": "widecsv",
+          "ok": true,
+          "stored": 12789108,
+          "pack_seconds": 52.73595880006906,
+          "unpack_seconds": 1.0063143000006676,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.gz",
+          "corpus": "widecsv",
+          "ok": true,
+          "stored": 14854297,
+          "pack_seconds": 3.328940099920146,
+          "unpack_seconds": 0.1995260000694543,
+          "note": "",
+          "index_share": 0.0
+        }
+      ]
+    },
+    {
+      "corpus": "mixed",
+      "kind": "generated",
+      "tests": "Realistic mixture. Tests whether already-compressed data is correctly left alone.",
+      "files": 460,
+      "bytes": 12501587,
+      "results": [
+        {
+          "tool": "compakt",
+          "corpus": "mixed",
+          "ok": true,
+          "stored": 10995833,
+          "pack_seconds": 3.144826399977319,
+          "unpack_seconds": 0.8976044000592083,
+          "note": "",
+          "index_share": 0.002346161495904858
+        },
+        {
+          "tool": "compakt-fast",
+          "corpus": "mixed",
+          "ok": true,
+          "stored": 11134706,
+          "pack_seconds": 2.0670375999761745,
+          "unpack_seconds": 0.8895950999576598,
+          "note": "",
+          "index_share": 0.0023168999702372025
+        },
+        {
+          "tool": "compakt-ref",
+          "corpus": "mixed",
+          "ok": true,
+          "stored": 11263702,
+          "pack_seconds": 2.063402700005099,
+          "unpack_seconds": 1.0052731999894604,
+          "note": "",
+          "index_share": 0.01253388983479854
+        },
+        {
+          "tool": "7z-mx5",
+          "corpus": "mixed",
+          "ok": true,
+          "stored": 10972735,
+          "pack_seconds": 1.5950076999142766,
+          "unpack_seconds": 0.7542503000004217,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "7z-mx9",
+          "corpus": "mixed",
+          "ok": true,
+          "stored": 10972539,
+          "pack_seconds": 1.578738100011833,
+          "unpack_seconds": 0.6170588999520987,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "zip",
+          "corpus": "mixed",
+          "ok": true,
+          "stored": 11245999,
+          "pack_seconds": 1.0209896001033485,
+          "unpack_seconds": 0.6943992000306025,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.zst",
+          "corpus": "mixed",
+          "ok": true,
+          "stored": 10996902,
+          "pack_seconds": 3.9540329999290407,
+          "unpack_seconds": 0.7992861000820994,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.xz",
+          "corpus": "mixed",
+          "ok": true,
+          "stored": 11013192,
+          "pack_seconds": 4.42201079998631,
+          "unpack_seconds": 1.1456193000776693,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.gz",
+          "corpus": "mixed",
+          "ok": true,
+          "stored": 11141486,
+          "pack_seconds": 0.6635364999528974,
+          "unpack_seconds": 0.9628680000314489,
+          "note": "",
+          "index_share": 0.0
+        }
+      ]
+    },
+    {
+      "corpus": "duplicates",
+      "kind": "generated",
+      "tests": "Whole-file deduplication.",
+      "files": 1800,
+      "bytes": 17382240,
+      "results": [
+        {
+          "tool": "compakt",
+          "corpus": "duplicates",
+          "ok": true,
+          "stored": 111712,
+          "pack_seconds": 2.0906164000043646,
+          "unpack_seconds": 3.7217208000365645,
+          "note": "",
+          "index_share": 0.17416213119450014
+        },
+        {
+          "tool": "compakt-fast",
+          "corpus": "duplicates",
+          "ok": true,
+          "stored": 139222,
+          "pack_seconds": 1.497442499967292,
+          "unpack_seconds": 3.713634599931538,
+          "note": "",
+          "index_share": 0.13979112496588184
+        },
+        {
+          "tool": "compakt-ref",
+          "corpus": "duplicates",
+          "ok": true,
+          "stored": 478714,
+          "pack_seconds": 1.6778493999736384,
+          "unpack_seconds": 3.2466930999653414,
+          "note": "",
+          "index_share": 0.7383949498030139
+        },
+        {
+          "tool": "7z-mx5",
+          "corpus": "duplicates",
+          "ok": true,
+          "stored": 93912,
+          "pack_seconds": 5.15683320001699,
+          "unpack_seconds": 2.5859630999621004,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "7z-mx9",
+          "corpus": "duplicates",
+          "ok": true,
+          "stored": 93845,
+          "pack_seconds": 5.502543400041759,
+          "unpack_seconds": 2.9269791999831796,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "zip",
+          "corpus": "duplicates",
+          "ok": true,
+          "stored": 3907206,
+          "pack_seconds": 1.864962499937974,
+          "unpack_seconds": 2.801284599932842,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.zst",
+          "corpus": "duplicates",
+          "ok": true,
+          "stored": 117657,
+          "pack_seconds": 1.464053999981843,
+          "unpack_seconds": 3.582852700026706,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.xz",
+          "corpus": "duplicates",
+          "ok": true,
+          "stored": 112996,
+          "pack_seconds": 6.888087200000882,
+          "unpack_seconds": 3.5385439000092447,
+          "note": "",
+          "index_share": 0.0
+        },
+        {
+          "tool": "tar.gz",
+          "corpus": "duplicates",
+          "ok": true,
+          "stored": 3068905,
+          "pack_seconds": 1.4851086999988183,
+          "unpack_seconds": 3.4184276999440044,
+          "note": "",
+          "index_share": 0.0
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,18 @@
+# Build and test dependencies. Not needed to run Compakt from source.
+#
+# Copyright (c) 2026 Rounak Miskin (Founder: Kasanki Labs)
+
+-r requirements.txt
+
+# Compiles core/compressor.py to a native extension. The routing engine
+# is proprietary, and Python bytecode is obfuscation rather than
+# protection -- a PyInstaller bundle can be unpacked and decompiled in
+# minutes. Requires MSVC build tools on Windows.
+cython==3.2.9
+
+# Freezes the application. Do NOT enable UPX compression: it is the
+# single biggest trigger for antivirus false positives on packed
+# Python binaries.
+pyinstaller==6.22.2
+
+pytest

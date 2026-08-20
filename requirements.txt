@@ -1,0 +1,58 @@
+# Compakt runtime dependencies.
+#
+# Copyright (c) 2026 Rounak Miskin (Founder: Kasanki Labs)
+#
+# Pinned exactly. Compakt offers reproducible archive output, so the
+# toolchain that produces it is pinned too — an unpinned codec version
+# is a silent way to break byte-identical builds.
+#
+# Verified installed and working on Python 3.14.3 (Windows), 2026-08-18.
+# Every one of these resolves to a prebuilt cp314 wheel; no C compiler
+# is needed to install them.
+#
+# NOTE: patool is deliberately absent. It decodes nothing itself — it
+# searches PATH and executes whatever archiver binary it finds, which
+# is both a hole in the air-gapped guarantee and a hijack vector. RAR
+# and ~40 other formats come from libarchive instead, in-process.
+
+# --- GUI (Windows only) ----------------------------------------------
+# Linux ships the `pakt` command line only -- no window -- so the whole
+# Tk stack is marked out of that install. This is not tidiness: on Linux
+# tkinterdnd2 carries its own Tcl/Tk binaries and customtkinter drags in
+# X11 and fontconfig, all of which would then have to be resolved on the
+# build host and frozen into a binary that never opens a window.
+#
+# Nothing outside app/ imports any of these -- cli/ and core/ are clean,
+# so the CLI build is unaffected by their absence.
+customtkinter==6.0.0 ; platform_system == "Windows"
+tkinterdnd2==0.6.2 ; platform_system == "Windows"
+
+# CTkImage needs Pillow, and app/gui.py loads the Kasanki Labs mark
+# through it. It was previously present only because it had been installed by
+# hand: recreating the environment from these pins alone produced a
+# build with NO MARK IN THE TITLE BAR, because _load_mark() catches
+# ImportError so that a missing asset can never stop the application
+# starting -- which also swallowed a missing library without a word.
+# Pinned here so the environment is actually reproducible from the file.
+# GUI-only: the sole import is app/gui.py, so it follows the Tk stack
+# out of the Linux install.
+pillow==12.3.0 ; platform_system == "Windows"
+
+# --- codecs ----------------------------------------------------------
+zstandard==0.25.0
+brotli==1.2.0
+
+# --- archive formats, read side --------------------------------------
+py7zr==1.1.3
+pyzipper==0.4.0
+libarchive-c==5.3
+pycdlib==1.20.0
+
+# --- cryptography ----------------------------------------------------
+# Supplies AES-256-GCM, Argon2id, PBKDF2-HMAC-SHA256 and Ed25519, which
+# is the complete set the .pakt format requires.
+cryptography==50.0.0
+
+# --- pulled in by py7zr, listed for visibility -----------------------
+# pyppmd, pybcj, inflate64, pycryptodomex
+# pybcj also supplies the BCJ branch filter used on executables.
