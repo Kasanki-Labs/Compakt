@@ -61,6 +61,16 @@ SLOGAN = "You deserve better compression."
 MENU_ITEMS = ["Why use .pakt?", "How it works", "User Manual",
               "Settings", "About"]
 
+#: Smallest gap between two progress messages, in seconds.
+#:
+#: extract() and compress() call back once per ENTRY. An archive of sixty
+#: thousand small files would put sixty thousand messages on the queue
+#: faster than _pump drains it every 80 ms, so the window would spend its
+#: time rendering a flipbook of filenames nobody can read while falling
+#: further behind the work it is meant to be describing. Ten updates a
+#: second is already past the rate at which a person reads it as live.
+PROGRESS_INTERVAL = 0.1
+
 #: Largest share of the window the content boxes may occupy.
 #:
 #: The window itself fills the screen; the BOXES do not. A drop zone
@@ -84,6 +94,12 @@ def _load_packer():
 
     The public repository is self-sufficient by design. A missing
     engine means somewhat worse ratios, never a broken application.
+
+    Both wrappers take ``**kw`` and forward only what they name, so an
+    argument neither knows about is dropped in silence rather than
+    raising. That is how the GUI came to pass ``progress`` for a while
+    without receiving any: nothing failed, nothing reported. Anything
+    added to ``pack`` has to be added here too.
     """
     try:
         from core.compressor import EngineOptions, pack as engine_pack
@@ -93,7 +109,8 @@ def _load_packer():
                 level=kw.get("level", AUTO),
                 reproducible=kw.get("reproducible", False),
                 password=kw.get("password"),
-                sign_key=kw.get("sign_key")))
+                sign_key=kw.get("sign_key")),
+                progress=kw.get("progress"))
         return pack, "routing engine"
     except Exception:
         from core.reference_encoder import pack as ref_pack
@@ -103,7 +120,8 @@ def _load_packer():
                             level=kw.get("level", AUTO),
                             reproducible=kw.get("reproducible", False),
                             password=kw.get("password"),
-                            sign_key=kw.get("sign_key"))
+                            sign_key=kw.get("sign_key"),
+                            progress=kw.get("progress"))
         return pack, "reference encoder"
 
 
@@ -633,9 +651,31 @@ class CompaktWindow(ctk.CTk, TkinterDnD.DnDWrapper):
         try:
             self._queue.put(_Msg("progress", text="Scanning and hashing…",
                                  fraction=0.05))
+
+            # Both the engine and the reference encoder accept this and
+            # neither was ever given one, so packing looked identical to
+            # a stall. Only the path and the size are used: the two
+            # implementations disagree about what the third argument
+            # means, so relying on it would be relying on a coincidence.
+            seen = {"files": 0, "bytes": 0, "at": 0.0}
+
+            def report(entry_path: str, size: int, _third: int = 0) -> None:
+                seen["files"] += 1
+                seen["bytes"] += max(size, 0)
+                now = time.monotonic()
+                if now - seen["at"] < PROGRESS_INTERVAL:
+                    return
+                seen["at"] = now
+                self._queue.put(_Msg(
+                    "progress",
+                    text=(f"Packing — {seen['files']:,} files · "
+                          f"{human_bytes(seen['bytes'])}"),
+                    fraction=0.05))
+
             result = self._pack_fn(sources, output, password=password,
                                    reproducible=reproducible,
-                                   sign_key=sign_key, level=level)
+                                   sign_key=sign_key, level=level,
+                                   progress=report)
             elapsed = max(time.monotonic() - started, 1e-6)
             for item in result.items[:400]:
                 if item.size:
@@ -690,10 +730,33 @@ class CompaktWindow(ctk.CTk, TkinterDnD.DnDWrapper):
                                      fraction=(n - 1) / len(targets)))
                 out = os.path.join(dest, os.path.splitext(name)[0])
 
+                # extract() has taken a progress callback all along and
+                # nothing passed one, so a single archive showed one
+                # "Extracting..." line and then nothing until it finished
+                # -- six silent minutes on a 2 GB archive, which reads as
+                # a hung window rather than as work being done.
+                seen = {"files": 0, "bytes": 0, "at": 0.0}
+
+                def report(entry_path: str, nbytes: int,
+                           _name=name, _n=n, _seen=seen) -> None:
+                    _seen["files"] += 1
+                    _seen["bytes"] += nbytes
+                    now = time.monotonic()
+                    if now - _seen["at"] < PROGRESS_INTERVAL:
+                        return
+                    _seen["at"] = now
+                    self._queue.put(_Msg(
+                        "progress",
+                        text=(f"Extracting {_name} — {_seen['files']:,} files"
+                              f" · {human_bytes(_seen['bytes'])}"),
+                        fraction=(_n - 1) / len(targets)))
+
                 attempts = 0
                 while True:
                     try:
-                        result = extract(archive, out, password=password)
+                        seen.update(files=0, bytes=0, at=0.0)
+                        result = extract(archive, out, password=password,
+                                         progress=report)
                         break
                     except Exception as exc:
                         if _is_password_failure(exc) and attempts < 2:
