@@ -100,6 +100,12 @@ h1{
   border:1px solid var(--hairline);border-radius:2rem;padding:.3rem .8rem;
 }
 .chip b{color:var(--kasanki);font-weight:600}
+/* The one chip that is a link. It carries the unsigned-installer note, so
+   it has to read as clickable without becoming a fifth button. */
+a.chip{text-decoration:none;transition:border-color .15s ease,
+  background-color .15s ease,color .15s ease}
+a.chip:hover,a.chip:focus-visible{
+  color:var(--text);border-color:var(--edge);background:var(--raised)}
 
 /* ---------- buttons: exactly one white ---------- */
 .actions{display:flex;gap:.7rem;justify-content:center;flex-wrap:wrap}
@@ -233,6 +239,7 @@ footer{padding:3.5rem 0 4.5rem;text-align:center}
       <span class="chip"><b>264</b> tests passing</span>
       <span class="chip">MPL-2.0 · open core</span>
       <span class="chip">Windows · Linux</span>
+      <a class="chip" href="#install">unsigned on Windows — <b>here&rsquo;s why</b></a>
     </div>
     <div class="actions">
       <a class="btn btn-primary" href="https://github.com/Kasanki-Labs/Compakt/releases/latest">
